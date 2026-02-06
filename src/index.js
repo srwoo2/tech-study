@@ -1,10 +1,9 @@
-import { Router } from './router';
-import { RootPage } from './pages/RootPage';
 import { WebRTCPage } from './pages/WebRTCPage';
+import { Header } from './layout/Header';
 import './webrtc/js/common/ga';
 
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('0.0.0.5');
+  console.log('0.0.0.6');
   
   // Inject global styles
   if (!document.getElementById('global-styles')) {
@@ -20,11 +19,39 @@ window.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(link2);
   }
 
-  // Router Setup
-  const router = new Router({
-    '/': (r) => new RootPage(r),
-    '/webrtc': (r, path) => new WebRTCPage(r, path),
-  });
+  // render
+  const app = document.getElementById('app');
 
-  window.router = router;
+  function renderLanding() {
+    app.innerHTML = '';
+
+    // Render Header
+    const header = new Header({  title: 'Frontend Study Portal',  showBackBtn: false });
+    app.appendChild(header.render());
+
+    // Render Content
+    const container = document.createElement('div');
+    container.style.padding = '20px';
+    container.style.textAlign = 'center';
+    
+    // Use standard link to /webrtc/
+    container.innerHTML = `<a id="webrtc-link" class="btn-primary">WebRTC Samples</a>`;
+    app.appendChild(container);
+
+    document.getElementById('webrtc-link').addEventListener('click', () => {
+      window.history.pushState({}, '', '/webrtc');
+      
+      app.innerHTML = '';
+      const page = new WebRTCPage();
+      page.render();
+    });
+  }
+
+  // Initial Routing Check
+  if (window.location.pathname === '/webrtc') {
+    const page = new WebRTCPage();
+    page.render();
+  } else {
+    renderLanding();
+  }
 });

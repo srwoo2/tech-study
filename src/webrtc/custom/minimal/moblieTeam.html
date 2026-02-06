@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="/src/webrtc/css/main.css">
 </head>
 <body>
-  <div id='container'>
+  <div id='container' style="padding: 0;">
     <div class="status-pill">
       <div><span id="statusText">접속</span></div>
     </div>
@@ -228,5 +228,6 @@
 
     init(); // 직접 호출 (module은 지연 실행되므로 window.onload 대신 직접 수행이 더 확실)
   </script>
+  <script src="/src/webrtc/js/common/inject-header.js"></script>
 </body>
 </html>

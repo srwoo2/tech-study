@@ -1,73 +1,21 @@
 import { routeConfig } from '../route';
 import { Header } from '../layout/Header';
-import { createTargetToggleBtn, createLinkItem } from '../webrtc/js/common/toggle-target.js';
+import { createTargetToggleBtn } from '../webrtc/js/common/toggle-target.js';
 
 export class WebRTCPage {
-    constructor(router, samplePath) {
-      this.router = router;
-      this.samplePath = samplePath; 
+    constructor() {
     }
   
     render() {
-      if (this.samplePath) {
-        this._renderSampleView();
-      } else {
-        this._renderListView();
-      }
+       this._renderListView();
     }
 
-    _renderSampleView() {
-      const app = document.getElementById('app');
-      app.innerHTML = '';
-      
-      // Use flexbox to prevent scrollbars when header is present
-      app.style.display = 'flex';
-      app.style.flexDirection = 'column';
-      app.style.height = '100%';
-  
-      const headerComp = new Header(this.router, {
-        title: `Viewing: ${this.samplePath.split('/').pop()}`,
-        backPath: '/webrtc'
-      });
-      app.appendChild(headerComp.render());
-  
-      const iframe = document.createElement('iframe');
-      iframe.src = this.samplePath;
-      iframe.style.width = '100%';
-      iframe.style.flex = '1'; // Take remaining space
-      iframe.style.border = 'none';
-      iframe.style.display = 'block'; // Remove extra space below iframe
-
-      iframe.onload = () => {
-        try {
-          const doc = iframe.contentDocument || iframe.contentWindow.document;
-          
-          // Inject main.css
-          const link1 = doc.createElement('link');
-          link1.rel = 'stylesheet';
-          link1.href = '/src/webrtc/css/main.css';
-          doc.head.appendChild(link1);
-
-          // Inject toggle-target.css
-          const link2 = doc.createElement('link');
-          link2.rel = 'stylesheet';
-          link2.href = '/src/webrtc/css/toggle-target.css';
-          doc.head.appendChild(link2);
-
-        } catch (e) {
-          console.warn('Could not inject styles into iframe (cross-origin or other error):', e);
-        }
-      };
-
-      app.appendChild(iframe);
-    }
-  
     _renderListView() {
       const app = document.getElementById('app');
       app.innerHTML = '';
   
       // Header
-      const headerComp = new Header(this.router, {
+      const headerComp = new Header({
         title: 'WebRTC Samples',
         showBackBtn: false
       });
@@ -114,12 +62,17 @@ export class WebRTCPage {
   
         const ul = document.createElement('ul');
         section.items.forEach(item => {
-           createLinkItem(ul, item.text, item.href, this.router, '/webrtc');
+           const li = document.createElement('li');
+           const a = document.createElement('a');
+           a.textContent = item.text;
+           a.href = item.href; 
+           li.appendChild(a);
+           ul.appendChild(li);
         });
         samplesSection.appendChild(ul);
       });
       container.appendChild(samplesSection);
- 
+
       const targetToggleBtn = createTargetToggleBtn((target) => {
         const links = document.querySelectorAll('a');
         links.forEach(link => {
@@ -132,5 +85,6 @@ export class WebRTCPage {
       app.appendChild(container);
     }
 
-    unmount() {}
+    unmount() {
+    }
 }
