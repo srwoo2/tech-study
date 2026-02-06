@@ -1,6 +1,5 @@
 export class Header {
-  constructor(router, options = {}) {
-    this.router = router;
+  constructor(options = {}) {
     this.title = options.title || 'WebRTC Samples';
     this.showBackBtn = options.showBackBtn ?? true;
     this.backPath = options.backPath || '/';
@@ -22,7 +21,12 @@ export class Header {
         if (this.onBack) {
           this.onBack();
         } else {
-          this.router.navigateTo(this.backPath);
+          // Default behavior: Go back in history if possible, or fallback to backPath
+          if (window.history.length > 1) {
+             window.history.back();
+          } else {
+             window.location.href = this.backPath;
+          }
         }
       });
       leftSection.appendChild(backBtn);
@@ -35,7 +39,7 @@ export class Header {
 
     header.appendChild(leftSection);
 
-    // Optional right section (for Home or other info)
+    // Optional right section (for Home)
     const rightSection = document.createElement('div');
     rightSection.className = 'header-right';
     
@@ -44,10 +48,7 @@ export class Header {
         homeLink.href = '/';
         homeLink.textContent = 'Home';
         homeLink.className = 'header-home-link';
-        homeLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.router.navigateTo('/');
-        });
+        // Standard link behavior
         rightSection.appendChild(homeLink);
     }
 
