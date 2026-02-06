@@ -3,7 +3,7 @@ import { Header } from './layout/Header';
 import './webrtc/js/common/ga';
 
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('0.0.0.6');
+  console.log('0.0.0.7');
   
   // Inject global styles
   if (!document.getElementById('global-styles')) {
