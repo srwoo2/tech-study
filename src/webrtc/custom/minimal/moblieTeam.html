@@ -161,6 +161,8 @@
         (sec) => { document.getElementById('countdownText').textContent = sec; }
       );
 
+      // Re-check media stream (iOS CallKit fix)
+      await callManager.getMediaStream(document.getElementById('localVideo'));
       callManager.ensurePC(document.getElementById('remoteVideo'));
       await signaling.connect();
       const offer = await callManager.createOffer();
@@ -179,6 +181,8 @@
         }
 
         callManager.role = 'callee';
+        // Re-check media stream (iOS CallKit fix)
+        await callManager.getMediaStream(document.getElementById('localVideo'));
         callManager.ensurePC(document.getElementById('remoteVideo'));
         await signaling.connect();
       } catch (e) {

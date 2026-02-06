@@ -129,6 +129,8 @@
       try {
         callManager.role = 'caller'; // 역할 명시
         callManager.state = window.CALL_STATUS.CONNECTING.id;
+        // Re-check media stream (iOS CallKit fix)
+        await callManager.getMediaStream(document.getElementById('localVideo'));
         callManager.ensurePC(document.getElementById('remoteVideo'));
         const offer = await callManager.createOffer();
         sdpBox.value = JSON.stringify(offer);
@@ -143,6 +145,8 @@
       try {
         callManager.role = 'callee'; // 역할 명시
         callManager.state = window.CALL_STATUS.CONNECTING.id;
+        // Re-check media stream (iOS CallKit fix)
+        await callManager.getMediaStream(document.getElementById('localVideo'));
         callManager.ensurePC(document.getElementById('remoteVideo'));
         const remoteOffer = JSON.parse(sdpBox.value.trim());
         const answer = await callManager.handleOffer(remoteOffer);

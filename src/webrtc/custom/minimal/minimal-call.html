@@ -105,6 +105,8 @@
             callManager.role = 'callee';
             callManager.state = window.CALL_STATUS.CONNECTING.id;
             
+            // Re-check media stream (iOS CallKit fix)
+            await callManager.getMediaStream(document.getElementById('localVideo'));
             callManager.ensurePC(document.getElementById('remoteVideo'));
             const answer = await callManager.handleOffer(data.offer);
             signaling.send({ type: 'answer', answer });
@@ -159,6 +161,8 @@
           (sec) => { document.getElementById('countdownText').textContent = sec; }
         );
         
+        // Re-check media stream (iOS CallKit fix)
+        await callManager.getMediaStream(document.getElementById('localVideo'));
         callManager.ensurePC(document.getElementById('remoteVideo'));
         const offer = await callManager.createOffer();
         signaling.send({ type: 'offer', offer });
