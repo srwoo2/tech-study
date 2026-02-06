@@ -82,6 +82,24 @@ window.handleCallEvent = function(type) {
       }
       break;
 
+    case 'video':
+      console.log("[Bridge] Triggering: toggleMedia('video')");
+      if (window.callManager && typeof window.callManager.toggleMedia === 'function') {
+        window.callManager.toggleMedia('video');
+      } else {
+        console.warn('[Bridge] callManager.toggleMedia function not found');
+      }
+      break;
+
+    case 'audio':
+      console.log("[Bridge] Triggering: toggleMedia('audio')");
+      if (window.callManager && typeof window.callManager.toggleMedia === 'function') {
+        window.callManager.toggleMedia('audio');
+      } else {
+        console.warn('[Bridge] callManager.toggleMedia function not found');
+      }
+      break;
+
     default:
       console.warn('[Bridge] Unknown event type:', type);
   }
