@@ -186,6 +186,10 @@
       callManager.state = CALL_STATUS.DISCONNECTED.id;
       updateUi(callManager.state);
 
+      if (typeof window.closeHandler === 'function') {
+        window.closeHandler();
+      }
+
       sdpBox.value = '';
       localCandidatesBox.value = '';
       remoteCandidatesBox.value = '';
