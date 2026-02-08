@@ -161,6 +161,8 @@
         (sec) => { document.getElementById('countdownText').textContent = sec; }
       );
 
+      // Re-check media stream (iOS CallKit fix)
+      await callManager.getMediaStream(document.getElementById('localVideo'));
       callManager.ensurePC(document.getElementById('remoteVideo'));
       await signaling.connect();
       const offer = await callManager.createOffer();
@@ -179,6 +181,8 @@
         }
 
         callManager.role = 'callee';
+        // Re-check media stream (iOS CallKit fix)
+        await callManager.getMediaStream(document.getElementById('localVideo'));
         callManager.ensurePC(document.getElementById('remoteVideo'));
         await signaling.connect();
       } catch (e) {
@@ -207,6 +211,10 @@
         callManager.stopMedia();
         document.getElementById('localVideo').srcObject = null;
         callManager.state = window.CALL_STATUS.DISCONNECTED.id;
+
+        if (typeof window.closeHandler === 'function') {
+           window.closeHandler();
+        }
       }
       
       // UI 동기화 강제 호출 (가끔 setter 호출 시점이 애매할 때 대비)

@@ -35,7 +35,16 @@ class CallManager {
    * 미디어 장치 권한 체크 및 스트림 획득
    */
   async getMediaStream(localVideoElement) {
-    if (this.localStream) return this.localStream;
+    // 0. 기존 스트림 유효성 체크 (iOS 백그라운드 복귀 시 스트림이 죽어있을 수 있음)
+    if (this.localStream) {
+      const hasLiveTracks = this.localStream.getTracks().some(t => t.readyState === 'live');
+      if (hasLiveTracks) {
+        return this.localStream;
+      } else {
+        console.log('[CallManager] Stream is inactive (likely due to backgrounding). Re-acquiring...');
+        this.stopMedia();
+      }
+    }
 
     try {
       // 0. 보안 컨텍스트 확인 (HTTPS 혹은 localhost 필수)
@@ -220,10 +229,11 @@ class CallManager {
     const track = tracks[0];
 
     if (track) {
-      track.enabled = !track.enabled;
+      // 카메라 Off: "검은 화면(Black Frames)"을 전송
+      // 마이크 Off: "무음(Silence)"을 전송
+      track.enabled = !track.enabled; // WebRTC 자체 기능으로 처리 
       
-      // UI 업데이트용 버블링/커스텀 이벤트나 콜백은 생략하고 
-      // 개별 페이지에서 처리하도록 버튼 텍스트 변경 로직은 유도
+      // UI 업데이트
       const btnId = isVideo ? 'toggleCameraBtn' : 'toggleAudioBtn';
       const btn = document.getElementById(btnId);
       if (btn) {

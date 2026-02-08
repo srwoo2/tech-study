@@ -39,9 +39,9 @@ window.closeHandler = function() {
   }
 
   // 브라우저 환경 (Fallback)
-  console.log('[Bridge] Fallback: redirecting to about:blank');
-  window.location.href = 'about:blank';
-  window.close();
+  // console.log('[Bridge] Fallback: redirecting to about:blank');
+  // window.location.href = 'about:blank';
+  // window.close();
 };
 
 /**
